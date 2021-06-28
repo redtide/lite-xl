@@ -5,7 +5,7 @@ project(agg
     HOMEPAGE_URL "https://franko.github.io/antigrain/"
 )
 set(CMAKE_CXX_STANDARD 11)
-set(AGG_DIR "${CMAKE_CURRENT_SOURCE_DIR}/subprojects/libagg")
+set(AGG_DIR "${CMAKE_CURRENT_SOURCE_DIR}/submodules/libagg")
 set(AGG_SOURCES
     "${AGG_DIR}/src/agg_arc.cpp"
     "${AGG_DIR}/src/agg_arrowhead.cpp"

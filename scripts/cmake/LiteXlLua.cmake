@@ -5,11 +5,11 @@ project(liblua
     DESCRIPTION "Powerful lightweight programming language designed for extending applications"
     HOMEPAGE_URL "https://www.lua.org/"
 )
-option(LUA_USE_READLINE "Use readline library" OFF)
+option(LUA_USE_READLINE "Use readline library" ON)
 option(LUA_SHARED "Build the shared library" OFF)
 option(LUA_BUILD_INTERPRETERS "Build the lua and luac interpreter" OFF)
 
-set(LUA_DIR "${CMAKE_CURRENT_SOURCE_DIR}/subprojects/lua")
+set(LUA_DIR "${CMAKE_CURRENT_SOURCE_DIR}/submodules/lua")
 set(LUA_HEADERS
     "${LUA_DIR}/src/lua.h"
     "${LUA_DIR}/src/luaconf.h"
@@ -54,19 +54,21 @@ set(LUA_LIB_SRC
     "${LUA_DIR}/src/linit.c"
 )
 set(LUA_CFLAGS LUA_COMPAT_ALL)
-set(LUA_INCLUDE_DIRS "src")
+set(LUA_INCLUDE_DIR "${LUA_DIR}/src")
 set(LUA_LINK_LIBS "")
 
 add_library(liblua STATIC
     ${LUA_CORE_SRC}
     ${LUA_LIB_SRC}
 )
+set(LUA_LIBRARY liblua)
 
 if(LUA_SHARED)
     add_library(liblua_shared SHARED
         ${LUA_CORE_SRC}
         ${LUA_LIB_SRC}
     )
+    set(LUA_LIBRARY liblua_shared)
 endif()
 
 if(LUA_BUILD_INTERPRETERS)
@@ -90,8 +92,12 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "FreeBSD" OR
         else()
              list(APPEND LUA_CFLAGS LUA_USE_LINUX)
         endif()
-        list(APPEND LUA_INCLUDE_DIRS "${Readline_INCLUDE_DIR}")
-        list(APPEND LUA_LINK_LIBS ${Readline_LIBRARY})
+        if(0)
+            # This resolves to `/usr/include`, screwing lua includes
+            # when building custom static
+            list(APPEND LUA_INCLUDE_DIR "${Readline_INCLUDE_DIR}")
+        endif()
+        list(APPEND LUA_LINK_LIBS readline)
     else()
         # Enable all flags except LUA_USE_READLINE.
          list(APPEND LUA_CFLAGS
@@ -118,7 +124,7 @@ list(APPEND LUA_LINK_LIBS m dl)
 
 target_link_libraries(liblua PUBLIC ${LUA_LINK_LIBS})
 target_compile_definitions(liblua PUBLIC ${LUA_CFLAGS})
-target_include_directories(liblua PRIVATE ${LUA_INCLUDE_DIRS})
+target_include_directories(liblua PRIVATE ${LUA_INCLUDE_DIR})
 
 if(LUA_SHARED)
     if(CMAKE_HOST_WIN32)
@@ -128,7 +134,7 @@ if(LUA_SHARED)
     endif()
     target_link_libraries(liblua_shared PUBLIC ${LUA_LINK_LIBS})
     target_compile_definitions(liblua_shared PUBLIC ${LUA_CFLAGS})
-    target_include_directories(liblua_shared PRIVATE ${LUA_INCLUDE_DIRS})
+    target_include_directories(liblua_shared PRIVATE ${LUA_INCLUDE_DIR})
 endif()
 
 if(LUA_BUILD_INTERPRETERS)
@@ -161,5 +167,3 @@ if(NOT MSVC)
         install(TARGETS lua luac DESTINATION "${CMAKE_INSTALL_BINDIR}")
     endif()
 endif()
-
-#show_build_info_if_needed()

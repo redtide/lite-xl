@@ -1,7 +1,8 @@
-build*
-.build*
+build*/
+.build*/
 .run*
 *.diff
+*.user
 *.zip
 *.tar.gz
 .lite-debug.log

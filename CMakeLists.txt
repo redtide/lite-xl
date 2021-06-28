@@ -5,6 +5,9 @@ project(lite-xl
     DESCRIPTION "A lightweight text editor written in Lua"
     HOMEPAGE_URL "https://lite-xl.github.io"
 )
+option(LITEXL_USE_RENDERER "Use SDL renderer" OFF)
+option(LITEXL_PORTABLE "Portable install" OFF)
+
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/scripts/cmake)
 set(LITEXL_VERSION ${PROJECT_VERSION})
 set(LITEXL_NAME ${PROJECT_NAME})

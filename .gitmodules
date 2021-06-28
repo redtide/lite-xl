@@ -1,0 +1,11 @@
+[submodule "submodules/libagg"]
+	path = submodules/libagg
+	url = https://github.com/franko/agg
+[submodule "submodules/lua"]
+	path = submodules/lua
+	url = https://github.com/franko/lua
+	branch = lua-5.2
+[submodule "submodules/reproc"]
+	path = submodules/reproc
+	url = https://github.com/franko/reproc
+	branch = main
