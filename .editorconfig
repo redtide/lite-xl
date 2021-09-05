@@ -9,3 +9,6 @@ trim_trailing_whitespace = true
 
 [meson.build]
 indent_size = 4
+
+[Info.plist*]
+indent_style = tab

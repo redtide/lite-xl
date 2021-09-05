@@ -87,14 +87,21 @@ main() {
     exit 1
   fi
 
-  if [[ $platform == "macos" && -n $bundle && -n $portable ]]; then
+  if [[ $platform == "macos" ]]; then
+    if [[ -n $bundle && -n $portable ]]; then
       echo "Warning: \"bundle\" and \"portable\" specified; excluding portable package."
       portable=""
+    fi
+    local macos_version_min=10.11
+    export MIN_SUPPORTED_MACOSX_DEPLOYMENT_TARGET=$macos_version_min
+    export CFLAGS=-mmacosx-version-min=$macos_version_min
+    export CXXFLAGS=-mmacosx-version-min=$macos_version_min
+    export LDFLAGS=-mmacosx-version-min=$macos_version_min
   fi
 
   rm -rf "${build_dir}"
 
-  CFLAGS=$CFLAGS LDFLAGS=$LDFLAGS meson setup \
+  meson setup \
     --buildtype=release \
     --prefix "$prefix" \
     $force_fallback \
